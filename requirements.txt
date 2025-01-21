@@ -1,0 +1,3 @@
+#install the packages
+snowflake>=0.8.0
+streamlit
