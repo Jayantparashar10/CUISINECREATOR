@@ -6,7 +6,7 @@
 
 ## Features
 - **Ingredient-Based Recipe Search**: Find recipes based on the ingredients you have.
-- **AI-Powered Recipe Generation**: Use Snowflake Cortex LLM to generate creative recipes.
+- **AI-Powered Recipe Generation**: Use Mistral Large2 LLM to generate creative recipes.
 - **Interactive Chat Interface**: Engage in a conversational experience with the AI chef.
 - **Cortex Search Integration**: Retrieve relevant recipe context using Snowflake Cortex Search.
 - **Customizable Settings**: Adjust parameters like context chunks and chat memory length.
