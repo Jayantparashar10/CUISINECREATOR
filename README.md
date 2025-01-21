@@ -56,7 +56,7 @@
 ## How to Use
 
 1. **Access the App**:
-   - Visit the live app: [Cuisine Creator](https://cuisinecreator-swxucrgd7sgflf3k29d3gn.streamlit.app/).
+   - Visit the live app: [Cuisine Creator](https://cuisinecreator.streamlit.app/).
 
 2. **Run Locally** (Optional):
    - Clone the repository:
