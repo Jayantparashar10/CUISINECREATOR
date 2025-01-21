@@ -1,7 +1,5 @@
 import streamlit as st
-from snowflake.core import Root # requires snowflake>=0.8.0
-from snowflake.snowpark.context import get_active_session
-import streamlit as st
+from snowflake.core import Root  # requires snowflake>=0.8.0
 from snowflake.snowpark.functions import col
 
 # Use st.connection instead of get_active_session
@@ -198,6 +196,15 @@ def run_recipe_app():
         )
 
 if __name__ == "__main__":
-    session = get_active_session()
+    # Use st.connection instead of get_active_session
+    try:
+        # Try to get the active session (works in Snowflake)
+        from snowflake.snowpark.context import get_active_session
+        session = get_active_session()
+    except:
+        # Fallback to st.connection (works locally or on Streamlit Cloud)
+        cnx = st.connection("snowflake")
+        session = cnx.session()
+
     root = Root(session)
     run_recipe_app()
