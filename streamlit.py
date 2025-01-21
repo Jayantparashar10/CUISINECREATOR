@@ -5,8 +5,11 @@ import streamlit as st
 from snowflake.snowpark.functions import col
 
 # Use st.connection instead of get_active_session
-cnx = st.connection("snowflake")
-session = cnx.session()
+DB = "cortex_search"  # Update with your database name
+SCHEMA = "public"  # Update with your schema name
+SERVICE = "recipe"  # Update with your Cortex Search service name
+BASE_TABLE = "cortex_search.public.recipe"  # Update with your recipe table
+ARRAY_ATTRIBUTES = {"INGREDIENTS"}  # Update with array-type columns (e.g., ingredients)
 
 SUPPORTED_MODELS = [
     "mistral-large2"
