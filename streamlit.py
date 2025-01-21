@@ -50,14 +50,23 @@ def load_search_services():
         except Exception as e:
             st.error(f"An error occurred while loading search services: {e}")
 
-def configure_settings():
-    st.title("Let's cook something!")
-    
-    # Move settings to the main app area
-    col1, col2 = st.columns(2)
-    with col1:
+def configure_sidebar_settings():
+    if "search_services" not in st.session_state or not st.session_state.search_services:
+        st.sidebar.warning("No search services available.")
+        return
+
+    st.sidebar.selectbox(
+        "Select Recipe Database:",
+        [s["name"] for s in st.session_state.search_services],
+        key="selected_search_service"
+    )
+
+    st.sidebar.button("Clear Chat", key="clear_conversation")
+    st.sidebar.toggle("Debug Mode", key="debug_mode", value=False)
+    st.sidebar.toggle("Use History", key="use_history", value=True)
+
+    with st.sidebar.expander("Advanced Settings"):
         st.selectbox("AI Chef Model:", SUPPORTED_MODELS, key="chef_model")
-    with col2:
         st.number_input(
             "Ingredient Context Chunks",
             value=5,
@@ -65,14 +74,15 @@ def configure_settings():
             min_value=1,
             max_value=10
         )
+        st.number_input(
+            "Chat Memory Length",
+            value=5,
+            key="chat_memory_length",
+            min_value=1,
+            max_value=10
+        )
 
-    st.number_input(
-        "Chat Memory Length",
-        value=5,
-        key="chat_memory_length",
-        min_value=1,
-        max_value=10
-    )
+    st.sidebar.expander("App State").write(st.session_state)
 
 def fetch_recipe_context(query):
     current_db, current_schema = session.get_current_database(), session.get_current_schema()
@@ -96,7 +106,7 @@ def fetch_recipe_context(query):
         context_text += f"Ingredient Context {idx+1}: {result[search_column]}\n\n"
 
     if st.session_state.debug_mode:
-        st.text_area("Discovered Ingredients", context_text, height=500)
+        st.sidebar.text_area("Discovered Ingredients", context_text, height=500)
 
     return context_text
 
@@ -128,7 +138,7 @@ def summarize_chat_for_query(chat_history, current_question):
     optimized_query = generate_completion(st.session_state.chef_model, summary_prompt)
 
     if st.session_state.debug_mode:
-        st.text_area("Optimized Search Query", optimized_query.replace("$", "\$"), height=150)
+        st.sidebar.text_area("Optimized Search Query", optimized_query.replace("$", "\$"), height=150)
 
     return optimized_query
 
@@ -169,8 +179,10 @@ def construct_recipe_prompt(user_query):
     return recipe_prompt
 
 def run_recipe_app():
-    # Configure settings
-    configure_settings()
+    st.title("Let's cook something!")
+
+    load_search_services()
+    configure_sidebar_settings()
     setup_chat_history()
 
     AVATARS = {"assistant": "❄️", "user": "🍴"}
