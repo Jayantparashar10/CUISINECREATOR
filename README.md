@@ -1,6 +1,6 @@
 # Cuisine Creator 🍴❄️
 
-**Cuisine Creator** is a Streamlit application powered by **Snowflake Cortex Search** and **Cortex LLM** to generate creative recipes based on available ingredients. It leverages Snowflake's advanced AI capabilities to provide an interactive and intelligent cooking assistant.
+**Cuisine Creator** is a Streamlit application powered by **Snowflake Cortex Search** and **Mistral Large2 LLM** to generate creative recipes based on available ingredients. It leverages Snowflake's advanced AI capabilities to provide an interactive and intelligent cooking assistant.
 
 ---
 
