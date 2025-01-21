@@ -18,7 +18,7 @@
 ### Application Development
 - [x] Built a Streamlit app for recipe generation.
 - [x] Integrated Snowflake Cortex Search for ingredient-based recipe retrieval.
-- [x] Used Snowflake Cortex LLM for AI-powered recipe generation.
+- [x] Used Mistral Large2 LLM for AI-powered recipe generation.
 - [x] Created an interactive chat interface for user interaction.
 - [x] Added customizable settings for context chunks and chat memory.
 
