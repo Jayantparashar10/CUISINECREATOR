@@ -151,7 +151,7 @@ def construct_recipe_prompt(user_query):
     return recipe_prompt
 
 def run_recipe_app():
-    st.title("🧑🍳 Pantry Chef: Create Magic from Leftovers!")
+    st.title("Let's cook something!")
 
     load_search_services()
     configure_sidebar_settings()
