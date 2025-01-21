@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from snowflake.snowpark.session import Session
 from snowflake.snowpark.functions import col
+from snowflake.core import Root  # requires snowflake>=0.8.0
 
 # Load environment variables
 SNOWFLAKE_ACCOUNT = os.getenv('SNOWFLAKE_ACCOUNT')
@@ -11,27 +12,6 @@ SNOWFLAKE_WAREHOUSE = os.getenv('SNOWFLAKE_WAREHOUSE')
 SNOWFLAKE_DATABASE = os.getenv('SNOWFLAKE_DATABASE')
 SNOWFLAKE_SCHEMA = os.getenv('SNOWFLAKE_SCHEMA')
 SNOWFLAKE_ROLE = os.getenv('SNOWFLAKE_ROLE')
-
-# Define connection parameters
-connection_parameters = {
-    "account": SNOWFLAKE_ACCOUNT,
-    "user": SNOWFLAKE_USER,
-    "password": SNOWFLAKE_PASSWORD,
-    "warehouse": SNOWFLAKE_WAREHOUSE,
-    "database": SNOWFLAKE_DATABASE,
-    "schema": SNOWFLAKE_SCHEMA,
-    "role": SNOWFLAKE_ROLE,
-}
-
-# Establish Snowflake connection
-try:
-    session = get_active_session()
-except:
-    session = Session.builder.configs(connection_parameters).create()
-
-# Set the database and schema
-session.use_database(SNOWFLAKE_DATABASE)
-session.use_schema(SNOWFLAKE_SCHEMA)
 
 DB = "cortex_search"  # Update with your database name
 SCHEMA = "public"  # Update with your schema name
@@ -191,16 +171,15 @@ def run_recipe_app():
                 )
 
 if __name__ == "__main__":
-    # Use st.connection instead of get_active_session
+    # Use st.connection to establish the Snowflake connection
     try:
-        # Try to get the active session (works in Snowflake)
-        from snowflake.snowpark.context import get_active_session
-        session = get_active_session()
-    except:
         # Fallback to st.connection (works locally or on Streamlit Cloud)
-        cnx = st.connection("snowflake")
+        cnx = st.connection("snowflake", type="snowflake")
         session = cnx.session()
-    
+    except Exception as e:
+        st.error(f"Failed to establish Snowflake connection: {e}")
+        raise
+
     # Set the database and schema
     session.use_database(SNOWFLAKE_DATABASE)
     session.use_schema(SNOWFLAKE_SCHEMA)
