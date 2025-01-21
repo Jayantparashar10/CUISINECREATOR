@@ -19,20 +19,36 @@ def setup_chat_history():
 
 def load_search_services():
     if "search_services" not in st.session_state:
-        services = session.sql("SHOW CORTEX SEARCH SERVICES;").collect()
-        service_data = []
-        if services:
-            for service in services:
-                service_name = service["name"]
-                search_column = session.sql(
-                    f"DESC CORTEX SEARCH SERVICE {service_name};"
-                ).collect()[0]["search_column"]
-                service_data.append({
-                    "name": service_name, 
-                    "search_column": search_column
-                })
-        st.session_state.search_services = service_data
+        try:
+            # Show Cortex Search Services
+            services = session.sql("SHOW CORTEX SEARCH SERVICES;").collect()
+            st.write("Cortex Search Services:", services)  # Debugging
 
+            service_data = []
+            if services:
+                for service in services:
+                    service_name = service["name"]
+                    st.write(f"Describing Cortex Search Service: {service_name}")  # Debugging
+
+                    # Describe the Cortex Search Service
+                    search_service_result = session.sql(
+                        f"DESC CORTEX SEARCH SERVICE {service_name};"
+                    ).collect()
+                    st.write("Search Service Result:", search_service_result)  # Debugging
+
+                    # Extract the search column
+                    if search_service_result:
+                        search_column = search_service_result[0]["search_column"]
+                        service_data.append({
+                            "name": service_name, 
+                            "search_column": search_column
+                        })
+                    else:
+                        st.error(f"No results found for Cortex Search Service: {service_name}")
+
+            st.session_state.search_services = service_data
+        except Exception as e:
+            st.error(f"An error occurred while loading search services: {e}")
 def configure_sidebar_settings():
     st.sidebar.selectbox(
         "Select Recipe Database:",
