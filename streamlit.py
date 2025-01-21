@@ -19,7 +19,7 @@ def setup_chat_history():
 
 def load_search_services():
     if "search_services" not in st.session_state:
-        services = session.query("SHOW CORTEX SEARCH SERVICES;").collect()
+        services = session.sql("SHOW CORTEX SEARCH SERVICES;").collect()
         service_data = []
         if services:
             for service in services:
